@@ -16,7 +16,7 @@ public interface StockDao {
     List<Map<String, String>> getStockInfo();
 
     @MapKey("list")
-    List<Map<String, String>> getStockInfoByCondition(@Param("stock_id") int stock_id, @Param("stock_name") String stock_name);
+    List<Map<String, Object>> getStockInfoByCondition(@Param("stock_id") int stock_id, @Param("stock_name") String stock_name);
 
 
 }

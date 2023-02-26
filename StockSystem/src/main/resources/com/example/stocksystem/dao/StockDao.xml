@@ -11,7 +11,7 @@
                 stock.stock_id = #{stock_id}
             </if>
             <if test="stock_name != null">
-                stock_name like "%"#{stock_name}"%"
+                and stock_name like "%"#{stock_name}"%"
             </if>
         </where>
     </select>

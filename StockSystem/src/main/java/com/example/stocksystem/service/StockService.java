@@ -13,7 +13,7 @@ public class StockService {
     @Autowired
     StockDao dao;
 
-    public List<Map<String, String>> getStockInfo(int stock_id, String stock_name){
+    public List<Map<String, Object>> getStockInfo(int stock_id, String stock_name){
         return dao.getStockInfoByCondition(stock_id, stock_name);
     }
 
