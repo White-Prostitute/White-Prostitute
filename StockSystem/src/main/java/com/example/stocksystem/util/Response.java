@@ -11,6 +11,12 @@ public class Response <T>{
     //未登录
     public static final int WITHOUT_LOGIN = 501;
 
+    //参数有误
+    public static final int PARA_MISTAKE = 502;
+
+    //服务器捕获异常
+    public static final int SERVER_EXCEPTION = 503;
+
     //相应信息
     private String msg;
 

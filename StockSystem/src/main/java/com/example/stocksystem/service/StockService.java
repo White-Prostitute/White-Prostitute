@@ -1,11 +1,12 @@
 package com.example.stocksystem.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.stocksystem.dao.StockDao;
+import com.example.stocksystem.vo.StockVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class StockService {
@@ -13,8 +14,17 @@ public class StockService {
     @Autowired
     StockDao dao;
 
-    public List<Map<String, Object>> getStockInfo(int stock_id, String stock_name){
-        return dao.getStockInfoByCondition(stock_id, stock_name);
+    public IPage<StockVo> getStockInfo(Integer stock_id, String stock_name, Integer pageIndex, Integer pageSize){
+        IPage<StockVo> page;
+        if(pageIndex != null && pageSize != null){
+            page = new Page<>(pageIndex, pageSize);
+        }else{
+            page = new Page<>();
+        }
+        QueryWrapper<StockVo> wrapper = new QueryWrapper<>();
+        if(stock_id != null)wrapper.eq("stock.stock_id", stock_id);
+        wrapper.like("stock_name", stock_name);
+        return dao.findStockInfo(page, wrapper);
     }
 
 }
