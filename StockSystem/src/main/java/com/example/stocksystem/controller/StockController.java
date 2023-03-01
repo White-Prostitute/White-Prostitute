@@ -1,7 +1,7 @@
 package com.example.stocksystem.controller;
 
 import com.example.stocksystem.service.StockService;
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.example.stocksystem.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ public class StockController {
     StockService service;
 
     @GetMapping()
-    public List<Map<String, Object>> getAllStockInfo(String stock_id, String stock_name){
+    public Response<List<Map<String, Object>>> getAllStockInfo(String stock_id, String stock_name){
         if(stock_id == null||stock_id.length()==0){
             stock_id = "-1";
         }
@@ -27,7 +27,11 @@ public class StockController {
         if(list == null){
             list = new ArrayList<>();
         }
-        return list;
+        Response<List<Map<String, Object>>> response = new Response<>();
+        response.setCode(Response.OK);
+        response.setMsg("获取数据成功");
+        response.setData(list);
+        return response;
     }
 
 
