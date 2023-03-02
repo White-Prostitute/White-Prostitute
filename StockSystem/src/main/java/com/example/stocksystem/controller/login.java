@@ -3,7 +3,6 @@ package com.example.stocksystem.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.stocksystem.dao.UserDao;
 import com.example.stocksystem.entity.User;
-import com.example.stocksystem.service.UserService;
 import com.example.stocksystem.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
