@@ -5,7 +5,6 @@ import com.example.stocksystem.service.StockService;
 import com.example.stocksystem.util.Response;
 import com.example.stocksystem.vo.StockVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +22,7 @@ public class StockController {
 
     //获取股票数据(带条件)
     @PostMapping()
-    public Response<List<StockVo>> getAllStockInfo(Integer stock_id, @DefaultValue("") String stock_name,
+    public Response<List<StockVo>> getAllStockInfo(Integer stock_id, String stock_name,
                                                                Integer pageIndex, Integer pageSize){
         Response<List<StockVo>> response = new Response<>();
         if(stock_id != null&&stock_id < 0){
