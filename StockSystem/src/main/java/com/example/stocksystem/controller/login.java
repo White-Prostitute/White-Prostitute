@@ -1,10 +1,12 @@
 package com.example.stocksystem.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.stocksystem.dao.UserDao;
 import com.example.stocksystem.entity.User;
 import com.example.stocksystem.service.UserService;
 import com.example.stocksystem.util.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/login")
 public class login {
 
-    @Resource
-    UserService userService;
+    @Autowired
+    UserDao userDao;
 
     /**
      * 登录
@@ -36,7 +38,7 @@ public class login {
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUser_id, user.getUser_id());
 
-        User one = userService.getOne(queryWrapper);
+        User one = userDao.selectOne(queryWrapper);
 
         Response<String> response = new Response<>();
 

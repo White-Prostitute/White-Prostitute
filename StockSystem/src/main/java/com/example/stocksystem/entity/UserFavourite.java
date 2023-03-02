@@ -1,6 +1,5 @@
 package com.example.stocksystem.entity;
 
-import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.Data;
 
 @Data
