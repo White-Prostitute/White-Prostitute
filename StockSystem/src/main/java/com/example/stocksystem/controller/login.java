@@ -58,6 +58,9 @@ public class login {
             return  response;
         }
 
+        // 存入 session
+        request.getSession().setAttribute("user", user);
+
         // 正确
         response.setCode(Response.OK);
         response.setData("登录成功！");
