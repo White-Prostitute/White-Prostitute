@@ -1,6 +1,7 @@
 package com.example.stocksystem.dao;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -27,4 +28,7 @@ public interface StockDao extends BaseMapper {
         "${ew.customSqlSegment}"
     )
     IPage<StockVo> findStockInfo(IPage<StockVo> page, @Param("ew") Wrapper wrapper);
+
+    @Select("select price_high from stock_change where stock_id = #{stock_id}")
+    List<Float> getHighList(int stock_id);
 }

@@ -5,7 +5,6 @@ import com.example.stocksystem.service.StockService;
 import com.example.stocksystem.util.Response;
 import com.example.stocksystem.vo.StockVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +22,7 @@ public class StockController {
 
     //获取股票数据(带条件)
     @PostMapping()
-    public Response<List<StockVo>> getAllStockInfo(Integer stock_id, @DefaultValue("") String stock_name,
+    public Response<List<StockVo>> getAllStockInfo(Integer stock_id, String stock_name,
                                                                Integer pageIndex, Integer pageSize){
         Response<List<StockVo>> response = new Response<>();
         if(stock_id != null&&stock_id < 0){
@@ -42,7 +41,7 @@ public class StockController {
         return response;
     }
 
-    @GetMapping("")
+    @GetMapping()
     public Response<List<StockVo>> getStockInfo(Integer pageIndex, Integer pageSize){
         Response<List<StockVo>> response = new Response<>();
         if(pageIndex == null || pageSize == null){
@@ -63,5 +62,21 @@ public class StockController {
                response.setData(new ArrayList<>());
                return response;
         }
+    }
+
+    @GetMapping("/high")
+    public Response<List<Float>> getHighList(Integer stock_id){
+        Response<List<Float>> response = new Response<>();
+        if(stock_id == null){
+            response.setCode(Response.PARA_MISTAKE);
+            response.setMsg("stock_id为空");
+            response.setData(new ArrayList<>());
+        }else{
+            List<Float> list = service.getHighList(stock_id);
+            response.setCode(Response.OK);
+            response.setMsg("获取数据成功");
+            response.setData(list);
+        }
+        return response;
     }
 }
