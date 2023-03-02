@@ -8,6 +8,8 @@ import com.example.stocksystem.vo.StockVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StockService {
 
@@ -25,6 +27,10 @@ public class StockService {
         if(stock_id != null)wrapper.eq("stock.stock_id", stock_id);
         wrapper.like("stock_name", stock_name);
         return dao.findStockInfo(page, wrapper);
+    }
+
+    public List<Float> getHighList(Integer stock_id){
+        return dao.getHighList(stock_id);
     }
 
 }

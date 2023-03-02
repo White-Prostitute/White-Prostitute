@@ -41,7 +41,7 @@ public class StockController {
         return response;
     }
 
-    @GetMapping("")
+    @GetMapping()
     public Response<List<StockVo>> getStockInfo(Integer pageIndex, Integer pageSize){
         Response<List<StockVo>> response = new Response<>();
         if(pageIndex == null || pageSize == null){
@@ -62,5 +62,21 @@ public class StockController {
                response.setData(new ArrayList<>());
                return response;
         }
+    }
+
+    @GetMapping("/high")
+    public Response<List<Float>> getHighList(Integer stock_id){
+        Response<List<Float>> response = new Response<>();
+        if(stock_id == null){
+            response.setCode(Response.PARA_MISTAKE);
+            response.setMsg("stock_id为空");
+            response.setData(new ArrayList<>());
+        }else{
+            List<Float> list = service.getHighList(stock_id);
+            response.setCode(Response.OK);
+            response.setMsg("获取数据成功");
+            response.setData(list);
+        }
+        return response;
     }
 }
