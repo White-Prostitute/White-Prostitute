@@ -5,16 +5,14 @@ import com.example.stocksystem.service.StockService;
 import com.example.stocksystem.util.Response;
 import com.example.stocksystem.vo.StockVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/stock")
+@CrossOrigin
 public class StockController {
 
     @Autowired
@@ -41,7 +39,7 @@ public class StockController {
         return response;
     }
 
-    @GetMapping()
+    @GetMapping()//http://192.168.0.143:8080/stock?pageIndex=1&pageSize=5
     public Response<List<StockVo>> getStockInfo(Integer pageIndex, Integer pageSize){
         Response<List<StockVo>> response = new Response<>();
         if(pageIndex == null || pageSize == null){

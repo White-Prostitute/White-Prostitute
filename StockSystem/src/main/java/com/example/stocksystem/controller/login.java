@@ -7,17 +7,15 @@ import com.example.stocksystem.service.UserService;
 import com.example.stocksystem.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+//http://localhost:8080/swagger-ui/index.html
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Slf4j
 @RequestMapping("/login")
+@CrossOrigin
 public class login {
 
     @Autowired
