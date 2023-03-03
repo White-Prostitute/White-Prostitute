@@ -33,4 +33,10 @@ public class StockService {
         return dao.getHighList(stock_id);
     }
 
+    public StockVo getOneStockInfo(Integer stock_id){
+        QueryWrapper<StockVo> wrapper = new QueryWrapper<>();
+        wrapper.eq("stock.stock_id", stock_id).orderByAsc("date").last("limit 1");
+        return dao.getOneStockInfo(wrapper);
+    }
+
 }

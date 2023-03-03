@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.stocksystem.entity.Stock;
 import com.example.stocksystem.vo.StockVo;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
@@ -31,4 +32,8 @@ public interface StockDao extends BaseMapper {
 
     @Select("select price_high from stock_change where stock_id = #{stock_id}")
     List<Float> getHighList(int stock_id);
+
+    @Select("select * from stock join stock_change on stock.stock_id = stock_change.stock_id " +
+    "${ew.customSqlSegment}")
+    StockVo getOneStockInfo(@Param("ew") Wrapper<StockVo> wrapper);
 }

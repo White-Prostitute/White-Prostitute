@@ -1,6 +1,7 @@
 package com.example.stocksystem.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.stocksystem.entity.Stock;
 import com.example.stocksystem.service.StockService;
 import com.example.stocksystem.util.Response;
 import com.example.stocksystem.vo.StockVo;
@@ -74,6 +75,22 @@ public class StockController {
             response.setCode(Response.OK);
             response.setMsg("获取数据成功");
             response.setData(list);
+        }
+        return response;
+    }
+
+    @GetMapping("/one")
+    public Response<StockVo> getOneInfo(Integer stock_id){
+        Response<StockVo> response = new Response<>();
+        if(stock_id == null){
+            response.setCode(Response.PARA_MISTAKE);
+            response.setMsg("需要stock_id参数");
+            response.setData(null);
+        }else{
+            StockVo info = service.getOneStockInfo(stock_id);
+            response.setCode(Response.OK);
+            response.setMsg("成功获取数据");
+            response.setData(info);
         }
         return response;
     }
