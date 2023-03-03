@@ -3,8 +3,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/stockmonitorsystem?useSSL=false&serverTimezone=Asia/Shanghai
     username: root
-    password: 1356
+    password: root
 
 mybatis:
   type-aliases-package: com.example.stocksystem.entity
   mapper-locations: com/example/stocksystem/dao/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
