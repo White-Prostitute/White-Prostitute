@@ -1,12 +1,12 @@
 package com.example.stocksystem.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
+import nonapi.io.github.classgraph.json.Id;
 
 @Data
 public class User {
 
-    @TableId
+    @Id
     Integer userId;
     String userName;
     String userPassword;

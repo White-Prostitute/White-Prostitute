@@ -3,6 +3,7 @@ package com.example.stocksystem.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.stocksystem.dao.UserDao;
 import com.example.stocksystem.entity.User;
+import com.example.stocksystem.service.UserService;
 import com.example.stocksystem.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class login {
     @Autowired
     UserDao userDao;
 
+    @Autowired
+    UserService userService;
+
     /**
      * 登录
      * @param request
@@ -30,14 +34,16 @@ public class login {
      */
     @PostMapping
     public Response login(HttpServletRequest request, @RequestBody User user){
-        log.info(String.valueOf(user));
 
-        String password = user.getUser_password();
+        String password = user.getUserPassword();
         // 创建查询条件
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getUser_id, user.getUser_id());
+        queryWrapper.eq(User::getUserPassword, user.getUserPassword());
 
-        User one = userDao.selectOne(queryWrapper);
+        User one = userService.getOne(queryWrapper);
+
+        log.info(String.valueOf(user.getUserPassword()));
+        log.info(String.valueOf(user.getUserId()));
 
         Response<String> response = new Response<>();
 
@@ -50,7 +56,7 @@ public class login {
         }
 
         // 如果密码错误
-        if(!one.getUser_password().equals(user.getUser_password())){
+        if(!one.getUserPassword().equals(user.getUserPassword())){
             response.setCode(Response.PARA_MISTAKE);
             response.setMsg("密码错误！");
             response.setData("failure!");
@@ -62,7 +68,7 @@ public class login {
 
         // 正确
         response.setCode(Response.OK);
-        response.setData("登录成功！");
+        response.setMsg("登录成功！");
         response.setData("success!");
         return response;
     }
