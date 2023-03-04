@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.stocksystem.entity.Stock;
+import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.vo.StockVo;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
-public interface StockDao extends BaseMapper {
+public interface StockDao extends BaseMapper<StockChange> {
 
     @MapKey("list")
     List<Map<String, Object>> getStockInfoByCondition(@Param("stock_id") int stock_id,
@@ -35,5 +36,5 @@ public interface StockDao extends BaseMapper {
 
     @Select("select * from stock join stock_change on stock.stock_id = stock_change.stock_id " +
     "${ew.customSqlSegment}")
-    StockVo getOneStockInfo(@Param("ew") Wrapper<StockVo> wrapper);
+    List<StockVo> getOneStockInfo(@Param("ew") Wrapper<StockVo> wrapper);
 }

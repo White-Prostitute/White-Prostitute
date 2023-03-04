@@ -11,11 +11,10 @@ public class StockChange {
     @Id
     int stockId;
     Date date;
-    float open;
-    float close;
-    float high;
-    float low;
+    float priceOpen;
+    float priceClose;
+    float priceHigh;
+    float priceLow;
     int volume;
-    float percent;
 
 }

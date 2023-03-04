@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.stocksystem.dao.StockDao;
+import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.vo.StockVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,10 +34,19 @@ public class StockService {
         return dao.getHighList(stock_id);
     }
 
-    public StockVo getOneStockInfo(Integer stock_id){
+    public List<StockVo> getOneStockInfo(Integer stock_id){
         QueryWrapper<StockVo> wrapper = new QueryWrapper<>();
         wrapper.eq("stock.stock_id", stock_id).orderByAsc("date").last("limit 1");
         return dao.getOneStockInfo(wrapper);
+    }
+
+    public boolean addStockInfo(StockChange change){
+        try{
+            dao.insert(change);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
 }

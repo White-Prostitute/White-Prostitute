@@ -2,6 +2,7 @@ package com.example.stocksystem.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.stocksystem.entity.Stock;
+import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.service.StockService;
 import com.example.stocksystem.util.Response;
 import com.example.stocksystem.vo.StockVo;
@@ -79,18 +80,35 @@ public class StockController {
         return response;
     }
 
-    @GetMapping("/one")
-    public Response<StockVo> getOneInfo(Integer stock_id){
-        Response<StockVo> response = new Response<>();
+    @GetMapping("/one/{stock_id}")
+    public Response<List<StockVo>> getOneInfo(@PathVariable Integer stock_id){
+        Response<List<StockVo>> response = new Response<>();
         if(stock_id == null){
             response.setCode(Response.PARA_MISTAKE);
             response.setMsg("需要stock_id参数");
             response.setData(null);
         }else{
-            StockVo info = service.getOneStockInfo(stock_id);
+            List<StockVo> info = service.getOneStockInfo(stock_id);
             response.setCode(Response.OK);
             response.setMsg("成功获取数据");
             response.setData(info);
+        }
+        return response;
+    }
+    //http://192.168.0.131:8080/stock/add
+
+    @PostMapping("/add")
+    public Response<String> addStockInfo(StockChange change){
+        Response<String> response = new Response<>();
+        boolean flag = service.addStockInfo(change);
+        if(flag){
+            response.setCode(Response.OK);
+            response.setMsg("插入股票记录成功");
+            response.setData("success");
+        }else{
+            response.setCode(Response.SERVER_EXCEPTION);
+            response.setMsg("插入操作失败");
+            response.setData("fail");
         }
         return response;
     }
