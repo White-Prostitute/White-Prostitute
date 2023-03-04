@@ -8,10 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.stocksystem.entity.Stock;
 import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.vo.StockVo;
-import org.apache.ibatis.annotations.MapKey;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -37,4 +34,8 @@ public interface StockDao extends BaseMapper<StockChange> {
     @Select("select * from stock join stock_change on stock.stock_id = stock_change.stock_id " +
     "${ew.customSqlSegment}")
     List<StockVo> getOneStockInfo(@Param("ew") Wrapper<StockVo> wrapper);
+
+    @Insert("insert into stock_change values(#{stockId}, #{date}, #{priceHigh}, #{priceLow}, #{priceOpen}, " +
+            "#{priceClose}, #{volume})")
+    int addOneStockInfo(StockChange change);
 }

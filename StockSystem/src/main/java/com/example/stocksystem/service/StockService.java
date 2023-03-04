@@ -42,9 +42,10 @@ public class StockService {
 
     public boolean addStockInfo(StockChange change){
         try{
-            dao.insert(change);
+            dao.addOneStockInfo(change);
             return true;
         }catch (Exception e){
+            e.printStackTrace();
             return false;
         }
     }

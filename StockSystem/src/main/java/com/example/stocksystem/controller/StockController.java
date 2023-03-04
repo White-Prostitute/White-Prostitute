@@ -1,7 +1,6 @@
 package com.example.stocksystem.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.stocksystem.entity.Stock;
 import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.service.StockService;
 import com.example.stocksystem.util.Response;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -98,8 +98,11 @@ public class StockController {
     //http://192.168.0.131:8080/stock/add
 
     @PostMapping("/add")
-    public Response<String> addStockInfo(StockChange change){
+    public Response<String> addStockInfo(@RequestBody StockChange change){
         Response<String> response = new Response<>();
+        Date date = new Date();
+        change.setDate(date);
+        System.out.println(change);
         boolean flag = service.addStockInfo(change);
         if(flag){
             response.setCode(Response.OK);
