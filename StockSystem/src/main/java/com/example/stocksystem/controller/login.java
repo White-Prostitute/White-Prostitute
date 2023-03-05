@@ -43,6 +43,8 @@ public class login {
         log.info(String.valueOf(user.getUserPassword()));
         log.info(String.valueOf(user.getUserId()));
 
+        System.out.println(user);
+
         Response<String> response = new Response<>();
 
         // 如果用户 id 不存在
