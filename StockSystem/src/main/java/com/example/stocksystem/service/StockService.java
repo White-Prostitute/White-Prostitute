@@ -17,7 +17,8 @@ public class StockService {
     @Autowired
     StockDao dao;
 
-    public IPage<StockVo> getStockInfo(Integer stock_id, String stock_name, Integer pageIndex, Integer pageSize){
+    public IPage<StockVo> getStockInfo(Integer stock_id, String stock_name,
+                                       Integer pageIndex, Integer pageSize, String date){
         IPage<StockVo> page;
         if(pageIndex != null && pageSize != null){
             page = new Page<>(pageIndex, pageSize);
@@ -25,8 +26,9 @@ public class StockService {
             page = new Page<>();
         }
         QueryWrapper<StockVo> wrapper = new QueryWrapper<>();
-        if(stock_id != null)wrapper.eq("stock.stock_id", stock_id);
-        wrapper.like("stock_name", stock_name);
+        if(stock_id!=null)wrapper.eq("stock.stock_id", stock_id);
+        if(stock_name!=null)wrapper.like("stock_name", stock_name);
+        if(date!=null)wrapper.eq("date", date);
         return dao.findStockInfo(page, wrapper);
     }
 

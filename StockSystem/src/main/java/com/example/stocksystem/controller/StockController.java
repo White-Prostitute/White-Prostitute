@@ -23,7 +23,7 @@ public class StockController {
     //获取股票数据(带条件)
     @PostMapping()
     public Response<List<StockVo>> getAllStockInfo(Integer stock_id, String stock_name,
-                                                               Integer pageIndex, Integer pageSize){
+                                                               Integer pageIndex, Integer pageSize, String date){
         Response<List<StockVo>> response = new Response<>();
         if(stock_id != null&&stock_id < 0){
             response.setCode(Response.PARA_MISTAKE);
@@ -31,7 +31,8 @@ public class StockController {
             response.setData(new ArrayList<>());
             return response;
         }
-        List<StockVo> list = service.getStockInfo(stock_id, stock_name, pageIndex, pageSize).getRecords();
+        System.out.println("日期是 : " + date);
+        List<StockVo> list = service.getStockInfo(stock_id, stock_name, pageIndex, pageSize, date).getRecords();
         if(list == null){
             list = new ArrayList<>();
         }
@@ -51,7 +52,7 @@ public class StockController {
             return response;
         }
         try{
-            IPage<StockVo> info = service.getStockInfo(null, "", pageIndex, pageSize);
+            IPage<StockVo> info = service.getStockInfo(null, "", pageIndex, pageSize, null);
             response.setCode(Response.OK);
             response.setMsg("获取数据成功");
             response.setData(info.getRecords());

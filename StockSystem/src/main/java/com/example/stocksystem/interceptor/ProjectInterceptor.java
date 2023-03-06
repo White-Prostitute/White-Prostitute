@@ -16,11 +16,11 @@ public class ProjectInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
         Object user = session.getAttribute("user");
-        if(user == null){
-            PrintWriter writer = response.getWriter();
-            writer.write("请先登录");
-            return false;
-        }
+//        if(user == null){
+//            PrintWriter writer = response.getWriter();
+//            writer.write("请先登录");
+//            return false;
+//        }
         return true;
     }
 
