@@ -17,13 +17,13 @@ import java.util.Map;
 public interface StockDao extends BaseMapper<StockChange> {
 
     @MapKey("list")
-    List<Map<String, Object>> getStockInfoByCondition(@Param("stock_id") int stock_id,
+    IPage<StockVo> getStockInfoByCondition(IPage<StockVo> page/*@Param("stock_id") int stock_id,
                                                       @Param("stock_name") String stock_name,
                                                       @Param("page_index") int pageIndex,
-                                                      @Param("page_size") int pageSize);
+                                                      @Param("page_size") int pageSize*/);
 
 
-    @Select("select * from stock join stock_change on stock.stock_id = stock_change.stock_id "+
+    @Select("select * from stock join stock_change_update on stock.stock_id = stock_change_update.stock_id "+
         "${ew.customSqlSegment}"
     )
     IPage<StockVo> findStockInfo(IPage<StockVo> page, @Param("ew") Wrapper wrapper);
@@ -39,5 +39,10 @@ public interface StockDao extends BaseMapper<StockChange> {
             "#{priceClose}, #{volume})")
     int addOneStockInfo(StockChange change);
 
-    Integer insertBatchSomeColumn(List<StockChange> list);
+    @Update("update stock_change_update set date = #{date}, price_high=#{priceHigh}, price_low=#{priceLow},"+
+    "price_open=#{priceOpen}, price_close=#{priceClose}, volume=#{volume} where stock_id = #{stockId}")
+    void updateStockInfo(StockChange change);
+
+    @Select("select * from stock_change where stock_id = #{stock_id}")
+    IPage<StockChange> getHistoryRecord(IPage<StockChange> page, Integer stock_id);
 }

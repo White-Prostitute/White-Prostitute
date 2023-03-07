@@ -45,6 +45,7 @@ public class StockService {
     public boolean addStockInfo(StockChange change){
         try{
             dao.addOneStockInfo(change);
+            dao.updateStockInfo(change);
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -54,6 +55,11 @@ public class StockService {
 
     public int getStockNum(){
         return dao.selectCount(null);
+    }
+
+    public List<StockChange> getHistoryRecord(Integer stock_id, Integer pageSize){
+        IPage<StockChange> page = new Page<>(1, pageSize);
+        return dao.getHistoryRecord(page, stock_id).getRecords();
     }
 
 }

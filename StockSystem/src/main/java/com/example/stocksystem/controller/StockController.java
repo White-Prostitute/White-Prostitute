@@ -24,7 +24,7 @@ public class StockController {
     @PostMapping()
     public Response<List<StockVo>> getAllStockInfo(Integer stock_id, String stock_name,
                                                                Integer pageIndex, Integer pageSize, String date){
-        System.out.println("index:"+pageIndex + "; size:" + pageSize);
+        System.out.println("index:"+pageIndex + "; size:" + pageSize + "id : " + stock_id);
         Response<List<StockVo>> response = new Response<>();
         if(stock_id != null&&stock_id < 0){
             response.setCode(Response.PARA_MISTAKE);
@@ -42,28 +42,14 @@ public class StockController {
         response.setData(list);
         return response;
     }
-
-    @GetMapping()
-    public Response<List<StockVo>> getStockInfo(Integer pageIndex, Integer pageSize){
-        Response<List<StockVo>> response = new Response<>();
-        if(pageIndex == null || pageSize == null){
-            response.setCode(Response.PARA_MISTAKE);
-            response.setMsg("参数有误");
-            response.setData(new ArrayList<>());
-            return response;
-        }
-        try{
-            IPage<StockVo> info = service.getStockInfo(null, "", pageIndex, pageSize, null);
-            response.setCode(Response.OK);
-            response.setMsg("获取数据成功");
-            response.setData(info.getRecords());
-            return response;
-        }catch (Exception e){
-               response.setCode(Response.SERVER_EXCEPTION);
-               response.setMsg("分页参数异常");
-               response.setData(new ArrayList<>());
-               return response;
-        }
+    //获取历史数据
+    @GetMapping("/history/{stock_id}")
+    public Response<List<StockChange>> getHistoryRecord(Integer stock_id, Integer size){
+        Response<List<StockChange>> response = new Response<>();
+        response.setMsg("成功");
+        response.setCode(Response.OK);
+        response.setData(service.getHistoryRecord(stock_id, size));
+        return response;
     }
 
     @GetMapping("/high")
@@ -128,9 +114,4 @@ public class StockController {
         response.setData(service.getStockNum());
         return response;
     }
-
-//    @GetMapping("/rem")
-//    public Response<Stock> recommend(){
-//
-//    }
 }
