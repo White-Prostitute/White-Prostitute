@@ -38,4 +38,6 @@ public interface StockDao extends BaseMapper<StockChange> {
     @Insert("insert into stock_change values(#{stockId}, #{date}, #{priceHigh}, #{priceLow}, #{priceOpen}, " +
             "#{priceClose}, #{volume})")
     int addOneStockInfo(StockChange change);
+
+    Integer insertBatchSomeColumn(List<StockChange> list);
 }

@@ -52,4 +52,8 @@ public class StockService {
         }
     }
 
+    public int getStockNum(){
+        return dao.selectCount(null);
+    }
+
 }

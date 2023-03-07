@@ -24,6 +24,7 @@ public class StockController {
     @PostMapping()
     public Response<List<StockVo>> getAllStockInfo(Integer stock_id, String stock_name,
                                                                Integer pageIndex, Integer pageSize, String date){
+        System.out.println("index:"+pageIndex + "; size:" + pageSize);
         Response<List<StockVo>> response = new Response<>();
         if(stock_id != null&&stock_id < 0){
             response.setCode(Response.PARA_MISTAKE);
@@ -42,7 +43,7 @@ public class StockController {
         return response;
     }
 
-    @GetMapping()//http://192.168.0.143:8080/stock?pageIndex=1&pageSize=5
+    @GetMapping()
     public Response<List<StockVo>> getStockInfo(Integer pageIndex, Integer pageSize){
         Response<List<StockVo>> response = new Response<>();
         if(pageIndex == null || pageSize == null){
@@ -96,7 +97,6 @@ public class StockController {
         }
         return response;
     }
-    //http://192.168.0.131:8080/stock/add
 
     @PostMapping("/add")
     public Response<String> addStockInfo(@RequestBody StockChange change){
@@ -116,4 +116,21 @@ public class StockController {
         }
         return response;
     }
+
+    /**
+     * 返回股票数量
+     */
+    @GetMapping("/num")
+    public Response<Integer> getStockNum(){
+        Response<Integer> response = new Response<>();
+        response.setCode(Response.OK);
+        response.setMsg("获取股票数量成功");
+        response.setData(service.getStockNum());
+        return response;
+    }
+
+//    @GetMapping("/rem")
+//    public Response<Stock> recommend(){
+//
+//    }
 }
