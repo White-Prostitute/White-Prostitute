@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/file")
 public class FileController {
@@ -55,6 +57,25 @@ public class FileController {
         response.setCode(Response.OK);
         response.setMsg("上传数据成功");
         response.setMsg("成功");
+        return response;
+    }
+
+    //接收csv文件并解析
+    @PostMapping("/csv")
+    public Response<String> uploadCsvData(@RequestBody MultipartFile file){
+        Response<String> response = new Response<>();
+        try{
+            List<StockChange> csvData = UsualUtil.getCsvData(file, StockChange.class);
+            System.out.println(csvData);
+        }catch (Exception e){
+            response.setCode(Response.SERVER_EXCEPTION);
+            response.setMsg("发生了错误");
+            response.setData("fail");
+            return response;
+        }
+        response.setCode(Response.OK);
+        response.setMsg("上传成功");
+        response.setData("success");
         return response;
     }
 

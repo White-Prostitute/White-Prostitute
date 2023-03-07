@@ -42,7 +42,7 @@ public class StockController {
         return response;
     }
     //获取历史数据
-    @GetMapping("/history/{stock_id}/{size}")
+    @PostMapping("/history/{stock_id}/{size}")
     public Response<List<StockChange>> getHistoryRecord(@PathVariable Integer stock_id, @PathVariable Integer size){
         Response<List<StockChange>> response = new Response<>();
         response.setMsg("成功");
