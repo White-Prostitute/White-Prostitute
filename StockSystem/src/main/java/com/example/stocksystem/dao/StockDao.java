@@ -45,4 +45,7 @@ public interface StockDao extends BaseMapper<StockChange> {
 
     @Select("select * from stock_change where stock_id = #{stock_id}")
     IPage<StockChange> getHistoryRecord(IPage<StockChange> page, Integer stock_id);
+
+    @Select("select * from stock_change where stock_id = #{stock_id}")
+    StockChange getUpdateRecord(Integer stock_id);
 }
