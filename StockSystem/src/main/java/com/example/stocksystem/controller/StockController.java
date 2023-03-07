@@ -1,6 +1,5 @@
 package com.example.stocksystem.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.service.StockService;
 import com.example.stocksystem.util.Response;
@@ -43,8 +42,8 @@ public class StockController {
         return response;
     }
     //获取历史数据
-    @GetMapping("/history/{stock_id}")
-    public Response<List<StockChange>> getHistoryRecord(Integer stock_id, Integer size){
+    @GetMapping("/history/{stock_id}/{size}")
+    public Response<List<StockChange>> getHistoryRecord(@PathVariable Integer stock_id, @PathVariable Integer size){
         Response<List<StockChange>> response = new Response<>();
         response.setMsg("成功");
         response.setCode(Response.OK);
