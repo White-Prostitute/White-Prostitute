@@ -1,6 +1,7 @@
 package com.example.stocksystem.controller;
 
 import com.example.stocksystem.entity.StockChange;
+import com.example.stocksystem.entity.User;
 import com.example.stocksystem.service.StockService;
 import com.example.stocksystem.util.Response;
 import com.example.stocksystem.util.UsualUtil;
@@ -8,9 +9,11 @@ import com.example.stocksystem.vo.StockVo;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,15 +45,14 @@ public class StockController {
 
     //获取股票数据(带条件)
     @RequestMapping()
-    public Response<List<StockVo>> getAllStockInfo(/*@RequestBody Map<String, String> map*/Integer stock_id, String stock_name,
-                                                               Integer pageIndex, Integer pageSize, String date) throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException, IOException {
-//        Integer pageIndex = map.get("pageIndex")!=null?Integer.parseInt(map.get("pageIndex")):null;
-//        Integer pageSize = map.get("pageSize")!=null?Integer.parseInt(map.get("pageSize")):null;
-//        Integer stock_id = map.get("stock_id")!=null?Integer.parseInt(map.get("stock_id")):null;
-//        String date = map.get("date");
-//        String stock_name = map.get("stock_name");
+    public Response<List<StockVo>> getAllStockInfo(HttpServletRequest request, Integer stock_id, String stock_name,
+                                                   Integer pageIndex, Integer pageSize, String date) throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException, IOException {
 
         System.out.println("index:"+pageIndex + "; size:" + pageSize + "id : " + stock_id);
+        //根据session获取用户id
+//        System.out.println("flag" + request.getSession().getAttribute("flag"));
+//        Integer user_id = ((User)request.getSession().getAttribute("user")).getUserId();
+        //Integer user_id = Integer.parseInt((String) request.getSession().getAttribute("id"));
         Response<List<StockVo>> response = new Response<>();
         if(stock_id != null&&stock_id < 0){
             response.setCode(Response.PARA_MISTAKE);
@@ -59,7 +61,7 @@ public class StockController {
             return response;
         }
         System.out.println("日期是 : " + date);
-        List<StockVo> list = service.getStockInfo(stock_id, stock_name, pageIndex, pageSize, date).getRecords();
+        List<StockVo> list = service.getStockInfo(stock_id, stock_name,2, pageIndex, pageSize, date);
         if(list == null){
             list = new ArrayList<>();
         }
@@ -112,20 +114,26 @@ public class StockController {
     }
 
     @PostMapping("/add")
-    public Response<String> addStockInfo(@RequestBody StockChange change){
+    public Response<String> addStockInfo(@RequestBody StockChange change, BindingResult result){
         Response<String> response = new Response<>();
         Date date = new Date();
         change.setDate(date);
         System.out.println(change);
-        boolean flag = service.addStockInfo(change);
-        if(flag){
-            response.setCode(Response.OK);
-            response.setMsg("插入股票记录成功");
-            response.setData("success");
-        }else{
-            response.setCode(Response.SERVER_EXCEPTION);
-            response.setMsg("插入操作失败");
+        if(result.hasErrors()){//首先进行数据校验
+            response.setCode(Response.PARA_MISTAKE);
+            response.setMsg("上传的参数有误");
             response.setData("fail");
+        }else{
+            boolean flag = service.addStockInfo(change);
+            if(flag){
+                response.setCode(Response.OK);
+                response.setMsg("插入股票记录成功");
+                response.setData("success");
+            }else{
+                response.setCode(Response.SERVER_EXCEPTION);
+                response.setMsg("插入操作失败,服务器内部错误");
+                response.setData("fail");
+            }
         }
         return response;
     }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.stocksystem.entity.StockChange;
+import com.example.stocksystem.entity.UserFavourite;
 import com.example.stocksystem.vo.StockVo;
 import org.apache.ibatis.annotations.*;
 
@@ -54,4 +55,7 @@ public interface StockDao extends BaseMapper<StockChange> {
 
     @Select("select stock_name from stock where stock_name like '%${name}%'")
     List<String> getNameList(String name);
+
+    @Select("select * from user_favourite where user_id = #{user_id} and stock_id=#{stock_id}")
+    UserFavourite checkFavourite(@Param("user_id") int user_id, @Param("stock_id") int stock_id);
 }

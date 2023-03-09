@@ -3,10 +3,8 @@ package com.example.stocksystem.util;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.util.ListUtils;
-import com.example.stocksystem.dao.StockDao;
 import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.service.StockChangeService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 

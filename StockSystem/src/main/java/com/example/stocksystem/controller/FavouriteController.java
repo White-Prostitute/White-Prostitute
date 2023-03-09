@@ -1,6 +1,7 @@
 package com.example.stocksystem.controller;
 
 
+import com.example.stocksystem.entity.User;
 import com.example.stocksystem.service.FavouriteService;
 import com.example.stocksystem.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +23,11 @@ public class FavouriteController {
     FavouriteService service;
 
     @GetMapping()
-    public Response<String> favourite(Integer user_id, Integer stock_id, Integer type){
+    public Response<String> favourite(HttpServletRequest request, Integer stock_id, Integer type){
         Response<String> response = new Response<>();
+        //Integer user_id = ((User)request.getSession().getAttribute("user")).getUserId();
         if(type==1||type==0){
-            service.favourite(user_id, stock_id, type);
+            service.favourite(2, stock_id, type);
             String msg = type == 1?"收藏成功":"取消收藏成功";
             response.setMsg(msg);
             response.setCode(Response.OK);

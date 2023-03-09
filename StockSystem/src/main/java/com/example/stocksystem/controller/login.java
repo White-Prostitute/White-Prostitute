@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -31,7 +33,7 @@ public class login {
      * @return
      */
     @PostMapping
-    public Response login(HttpServletRequest request, @RequestBody User user){
+    public Response login(HttpServletRequest request, @RequestBody User user, HttpServletResponse rp){
 
         String password = user.getUserPassword();
         // 创建查询条件
@@ -65,6 +67,8 @@ public class login {
 
         // 存入 session
         request.getSession().setAttribute("user", user);
+        request.getSession().setAttribute("flag", 1);
+        System.out.println("登录中 " + user);
 
         // 正确
         response.setCode(Response.OK);

@@ -62,7 +62,8 @@ public class UsualUtil {
                 change.setPriceOpen(Float.parseFloat(next[4]));
                 change.setPriceClose(Float.parseFloat(next[5]));
                 change.setVolume(Integer.parseInt(next[6]));
-                list.add(change);
+                //校验股票数据是否合理
+                if(ValidateUtil.validateStockChange(change)) list.add(change);
             }
             isHead = false;
         }

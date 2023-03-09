@@ -25,4 +25,6 @@ public class StockVo {
 
     private Integer volume;
 
+    private boolean isFavourite;
+
 }

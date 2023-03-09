@@ -5,7 +5,7 @@ import com.example.stocksystem.entity.StockChange;
 public class ValidateUtil{
 
     //检验股票交易数据是否合理
-    public boolean validateStockChange(StockChange change){
+    public static boolean validateStockChange(StockChange change){
         return (change.getStockId() > 0)&&
                 (change.getPriceClose() > 0)&&
                 (change.getPriceHigh() > 0)&&

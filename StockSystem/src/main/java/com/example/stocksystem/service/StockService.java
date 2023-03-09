@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.stocksystem.dao.StockDao;
 import com.example.stocksystem.entity.StockChange;
+import com.example.stocksystem.entity.UserFavourite;
 import com.example.stocksystem.vo.StockVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class StockService {
     @Autowired
     StockDao dao;
 
-    public IPage<StockVo> getStockInfo(Integer stock_id, String stock_name,
+    public List<StockVo> getStockInfo(Integer stock_id, String stock_name,Integer user_id,
                                        Integer pageIndex, Integer pageSize, String date){
         IPage<StockVo> page;
         if(pageIndex != null && pageSize != null){
@@ -31,7 +32,12 @@ public class StockService {
         if(stock_id!=null)wrapper.eq("stock.stock_id", stock_id);
         if(stock_name!=null)wrapper.like("stock_name", stock_name);
         if(date!=null)wrapper.eq("date", date);
-        return dao.findStockInfo(page, wrapper);
+        List<StockVo> records = dao.findStockInfo(page, wrapper).getRecords();
+        for (StockVo vo : records) {
+            UserFavourite i = dao.checkFavourite(user_id, vo.getStockId());
+            vo.setFavourite(i != null);
+        }
+        return records;
     }
 
     public List<Float> getHighList(Integer stock_id){
