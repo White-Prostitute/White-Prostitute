@@ -93,11 +93,11 @@ public class StockService {
                     } else if (rawMonth == realMonth) {
                         if (rawDay <= realDay) {
                             dao.updateStockInfo(change);
-                        } else if (rawDay > realDay) {
+                        } else {
                             // 不符合常理性判断，该分支可删除
                             System.out.println("添加的数据日期超出限制！");
                         }
-                    } else if (rawMonth > realMonth) {
+                    } else {
                         // 不符合常理性判断，该分支可删除
                         System.out.println("添加的数据月份超出限制！");
                     }
@@ -113,11 +113,11 @@ public class StockService {
                     } else if (rawMonth == realMonth) {
                         if (rawDay <= realDay) {
                             dao.updateStockInfo(change);
-                        } else if (rawDay > realDay) {
+                        } else {
                             // 不符合常理性判断，该分支可删除
                             System.out.println("添加的数据日期超出限制！");
                         }
-                    } else if (rawMonth > realMonth) {
+                    } else {
                         // 不符合常理性判断，该分支可删除
                         System.out.println("添加的数据月份超出限制！");
                     }
@@ -127,15 +127,15 @@ public class StockService {
                     } else if (rawDay > realDay) {
                         // 不符合常理性判断，该分支可删除
                         System.out.println("添加的数据月份超出限制！");
-                    } else if (rawDay < realDay) {
+                    } else {
                         // 该分支可被删除
                         System.out.println("添加的不是最新数据，不用更新 update 数据库！");
                     }
-                } else if (rawMonth < updMonth) {
+                } else {
                     // 该分支可被删除
                     System.out.println("添加的不是最新数据，不用更新 update 数据库！");
                 }
-            } else if (rawYear < updYear) {
+            } else {
                 // 该分支可被删除
                 System.out.println("添加的不是最新数据，不用更新 update 数据库！");
             }
@@ -154,6 +154,15 @@ public class StockService {
     public List<StockChange> getHistoryRecord(Integer stock_id, Integer pageSize){
         IPage<StockChange> page = new Page<>(1, pageSize);
         return dao.getHistoryRecord(page, stock_id).getRecords();
+    }
+
+    public List<StockVo> getTop(Integer size){
+        IPage<StockVo> page = new Page<>(1, size);
+        return dao.getTop(page).getRecords();
+    }
+
+    public List<String> getNameList(String name){
+        return dao.getNameList(name);
     }
 
 }

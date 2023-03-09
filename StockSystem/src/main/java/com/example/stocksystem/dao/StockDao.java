@@ -1,17 +1,14 @@
 package com.example.stocksystem.dao;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.stocksystem.entity.Stock;
 import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.vo.StockVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface StockDao extends BaseMapper<StockChange> {
@@ -46,6 +43,15 @@ public interface StockDao extends BaseMapper<StockChange> {
     @Select("select * from stock_change where stock_id = #{stock_id}")
     IPage<StockChange> getHistoryRecord(IPage<StockChange> page, Integer stock_id);
 
-    @Select("select * from stock_change where stock_id = #{stock_id}")
+    @Select("select * from stock_change_update where stock_id = #{stock_id}")
     StockChange getUpdateRecord(Integer stock_id);
+
+    @Select("select * from stock join stock_change_update on stock.stock_id = stock_change_update.stock_id order by volume DESC")
+    IPage<StockVo> getTop(IPage<StockVo> page);
+
+    @Select("select * from stock join stock_change_update on stock.stock_id = stock_change_update.stock_id where stock.stock_id=#{stock_id}")
+    StockVo getOneInfoById(Integer stock_id);
+
+    @Select("select stock_name from stock where stock_name like '%${name}%'")
+    List<String> getNameList(String name);
 }

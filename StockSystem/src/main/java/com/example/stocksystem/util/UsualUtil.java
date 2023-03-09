@@ -1,19 +1,20 @@
 package com.example.stocksystem.util;
 
 import com.example.stocksystem.entity.StockChange;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import com.example.stocksystem.vo.StockVo;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.*;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.stylesheets.LinkStyle;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class UsualUtil {
 
@@ -39,6 +40,58 @@ public class UsualUtil {
         CsvToBean<T> csvToBean = new CsvToBeanBuilder<T>(in).withSeparator(',').withIgnoreQuotations(true)
                 .withMappingStrategy(mappingStrategy).build();
         return csvToBean.parse();
+    }
+
+    //手动解析csv文件,获取对应对象的List
+    public static List<StockChange> getCsvData(MultipartFile file) throws IOException, ParseException {
+        CSVReader csvReader = new CSVReaderBuilder(new BufferedReader(
+                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))).build();
+        Iterator<String[]> iterator = csvReader.iterator();
+        boolean isHead = true;
+        List<StockChange> list = new ArrayList<>();
+        while (iterator.hasNext()){
+            String[] next = iterator.next();
+            if(!isHead){
+                StockChange change = new StockChange();
+                change.setStockId(Integer.parseInt(next[0]));
+                SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+                Date date = format.parse(next[1]);
+                change.setDate(date);
+                change.setPriceHigh(Float.parseFloat(next[2]));
+                change.setPriceLow(Float.parseFloat(next[3]));
+                change.setPriceOpen(Float.parseFloat(next[4]));
+                change.setPriceClose(Float.parseFloat(next[5]));
+                change.setVolume(Integer.parseInt(next[6]));
+                list.add(change);
+            }
+            isHead = false;
+        }
+        return list;
+    }
+
+    //将获取到的list写入Csv文件
+    public static void writeCsvData(List<StockVo> list) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+        Writer writer = new FileWriter("data" + File.pathSeparator + "data.csv");
+        String[] column = {"stockId","date","stockName","stockType","priceHigh","priceLow",
+                "priceOpen","priceClose","volume"};
+        ColumnPositionMappingStrategy<StockVo> mappingStrategy =
+                new ColumnPositionMappingStrategy<>();
+        mappingStrategy.setType(StockVo.class);
+        mappingStrategy.setColumnMapping(column);
+
+        CSVWriter csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR,
+                CSVWriter.NO_QUOTE_CHARACTER, '\\', "\n");
+        String[] header =  {"stockId","date","stockName","stockType","priceHigh","priceLow",
+                "priceOpen","priceClose","volume"};
+        csvWriter.writeNext(header);
+
+        StatefulBeanToCsv<StockVo> beanToCsv = new StatefulBeanToCsvBuilder<StockVo>(writer)
+                .withMappingStrategy(mappingStrategy)
+                .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+                .withSeparator(CSVWriter.DEFAULT_SEPARATOR).build();
+        beanToCsv.write(list);
+        csvWriter.close();
+        writer.close();
     }
 
 }

@@ -3,10 +3,18 @@ package com.example.stocksystem.controller;
 import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.service.StockService;
 import com.example.stocksystem.util.Response;
+import com.example.stocksystem.util.UsualUtil;
 import com.example.stocksystem.vo.StockVo;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,10 +27,29 @@ public class StockController {
     @Autowired
     StockService service;
 
+
+    @GetMapping("/test")
+    public void test(HttpServletResponse servletResponse) throws IOException {
+        FileInputStream fis = new FileInputStream("data"+ File.pathSeparator+"data.csv");
+        ServletOutputStream outputStream = servletResponse.getOutputStream();
+        servletResponse.setHeader("Content-Disposition", "attachment;fileName=data.csv");
+        byte[] bytes = new byte[1024];
+        int len = 0;
+        while((len = fis.read(bytes))!=-1){
+            outputStream.write(bytes, 0, len);
+        }
+    }
+
     //获取股票数据(带条件)
-    @PostMapping()
-    public Response<List<StockVo>> getAllStockInfo(Integer stock_id, String stock_name,
-                                                               Integer pageIndex, Integer pageSize, String date){
+    @RequestMapping()
+    public Response<List<StockVo>> getAllStockInfo(/*@RequestBody Map<String, String> map*/Integer stock_id, String stock_name,
+                                                               Integer pageIndex, Integer pageSize, String date) throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException, IOException {
+//        Integer pageIndex = map.get("pageIndex")!=null?Integer.parseInt(map.get("pageIndex")):null;
+//        Integer pageSize = map.get("pageSize")!=null?Integer.parseInt(map.get("pageSize")):null;
+//        Integer stock_id = map.get("stock_id")!=null?Integer.parseInt(map.get("stock_id")):null;
+//        String date = map.get("date");
+//        String stock_name = map.get("stock_name");
+
         System.out.println("index:"+pageIndex + "; size:" + pageSize + "id : " + stock_id);
         Response<List<StockVo>> response = new Response<>();
         if(stock_id != null&&stock_id < 0){
@@ -36,6 +63,7 @@ public class StockController {
         if(list == null){
             list = new ArrayList<>();
         }
+        UsualUtil.writeCsvData(list);
         response.setCode(Response.OK);
         response.setMsg("获取数据成功");
         response.setData(list);
@@ -111,6 +139,38 @@ public class StockController {
         response.setCode(Response.OK);
         response.setMsg("获取股票数量成功");
         response.setData(service.getStockNum());
+        return response;
+    }
+
+    @GetMapping("/top")
+    public Response<List<StockVo>> getTop(Integer size){
+        Response<List<StockVo>> response = new Response<>();
+        if(size==null||size <= 0){
+            response.setCode(Response.PARA_MISTAKE);
+            response.setMsg("参数错误");
+            response.setData(new ArrayList<>());
+        }else{
+            List<StockVo> top = service.getTop(size);
+            response.setCode(Response.OK);
+            response.setMsg("获取成功");
+            response.setData(top);
+        }
+        return response;
+    }
+
+    @GetMapping("/nameList")
+    public Response<List<String>> getNameList(String name){
+        System.out.println(name);
+        Response<List<String>> response = new Response<>();
+        if(name == null || name.length() == 0){
+            response.setCode(Response.PARA_MISTAKE);
+            response.setMsg("需要参数");
+            response.setData(new ArrayList<>());
+        }else{
+            response.setCode(Response.OK);
+            response.setMsg("获取数据成功");
+            response.setData(service.getNameList(name));
+        }
         return response;
     }
 }
