@@ -2,12 +2,10 @@ package com.example.stocksystem.controller;
 
 import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.entity.User;
+import com.example.stocksystem.service.FavouriteService;
 import com.example.stocksystem.service.StockService;
 import com.example.stocksystem.util.Response;
-import com.example.stocksystem.util.UsualUtil;
 import com.example.stocksystem.vo.StockVo;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +28,8 @@ public class StockController {
     @Autowired
     StockService service;
 
+    @Autowired
+    FavouriteService favouriteService;
 
     @GetMapping("/test")
     public void test(HttpServletResponse servletResponse) throws IOException {
@@ -37,7 +37,7 @@ public class StockController {
         ServletOutputStream outputStream = servletResponse.getOutputStream();
         servletResponse.setHeader("Content-Disposition", "attachment;fileName=data.csv");
         byte[] bytes = new byte[1024];
-        int len = 0;
+        int len;
         while((len = fis.read(bytes))!=-1){
             outputStream.write(bytes, 0, len);
         }
@@ -46,13 +46,10 @@ public class StockController {
     //获取股票数据(带条件)
     @RequestMapping()
     public Response<List<StockVo>> getAllStockInfo(HttpServletRequest request, Integer stock_id, String stock_name,
-                                                   Integer pageIndex, Integer pageSize) throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException, IOException {
+                                                   Integer pageIndex, Integer pageSize) {
 
-        System.out.println("index:"+pageIndex + "; size:" + pageSize + "id : " + stock_id);
         //根据session获取用户id
         Integer user_id = ((User)request.getSession().getAttribute("user")).getUserId();
-        System.out.println("通过session获取到的id : " + user_id);
-        //Integer user_id = Integer.parseInt((String) request.getSession().getAttribute("id"));
         Response<List<StockVo>> response = new Response<>();
         if(stock_id != null&&stock_id < 0){
             response.setCode(Response.PARA_MISTAKE);
@@ -64,7 +61,6 @@ public class StockController {
         if(list == null){
             list = new ArrayList<>();
         }
-        UsualUtil.writeCsvData(list);
         response.setCode(Response.OK);
         response.setMsg("获取数据成功");
         response.setData(list);
@@ -77,6 +73,31 @@ public class StockController {
         response.setMsg("成功");
         response.setCode(Response.OK);
         response.setData(service.getHistoryRecord(stock_id, size));
+        return response;
+    }
+
+    //获取所
+    @GetMapping("/favourite/history")
+    public Response<List<List<StockChange>>> getHistoryListRecord(HttpServletRequest request){
+        Response<List<List<StockChange>>> response = new Response<>();
+        Integer userId;
+        try{
+            userId = ((User) request.getSession().getAttribute("user")).getUserId();
+        }catch (Exception e){
+            response.setCode(Response.WITHOUT_LOGIN);
+            response.setMsg("请先登录");
+            response.setData(new ArrayList<>());
+            return response;
+        }
+        List<Integer> list = favouriteService.list(userId);
+        List<List<StockChange>> historyList = new ArrayList<>();
+        for (Integer integer : list) {
+            List<StockChange> historyRecord = service.getHistoryRecord(integer, 50);
+            historyList.add(historyRecord);
+        }
+        response.setCode(Response.OK);
+        response.setMsg("请求数据成功");
+        response.setData(historyList);
         return response;
     }
 

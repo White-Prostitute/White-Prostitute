@@ -16,7 +16,7 @@ public class SpringMvcSupport implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //registry.addInterceptor(interceptor).addPathPatterns("/stock","/stock/*","/favourite","/favourite/*");
+        registry.addInterceptor(interceptor).addPathPatterns("/stock","/stock/*","/favourite","/favourite/*");
     }
 
     @Override

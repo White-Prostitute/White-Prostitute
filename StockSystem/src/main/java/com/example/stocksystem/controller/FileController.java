@@ -81,7 +81,11 @@ public class FileController {
         Response<String> response = new Response<>();
         try{
             List<StockChange> csvData = UsualUtil.getCsvData(file);
-            service.updateBatchById(csvData);//更新实时表
+            System.out.println("数据量 : " + csvData.size());
+            //service.updateBatchById(csvData);//更新实时表
+            for (StockChange change : csvData) {
+                dao.updateStockInfo(change);
+            }
         }catch (Exception e){
             response.setCode(Response.SERVER_EXCEPTION);
             response.setMsg("发生了错误");
@@ -100,7 +104,6 @@ public class FileController {
         System.out.println("收到了数据");
         List<StockVo> stockVos = new ArrayList<>();
         for (String s : list) {
-            System.out.println(s);
             StockVo vo = dao.getOneInfoById(Integer.parseInt(s));
             stockVos.add(vo);
         }

@@ -1,5 +1,6 @@
 package com.example.stocksystem.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import nonapi.io.github.classgraph.json.Id;
 
@@ -11,7 +12,7 @@ import java.util.Date;
 @Data
 public class StockChange implements Serializable {
 
-    @Id
+    @TableId
     int stockId;
     Date date;
     @Min(value = 0)

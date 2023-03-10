@@ -47,7 +47,7 @@ public class UsualUtil {
         CSVReader csvReader = new CSVReaderBuilder(new BufferedReader(
                 new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))).build();
         Iterator<String[]> iterator = csvReader.iterator();
-        boolean isHead = true;
+        boolean isHead = true;//不读表头
         List<StockChange> list = new ArrayList<>();
         while (iterator.hasNext()){
             String[] next = iterator.next();
