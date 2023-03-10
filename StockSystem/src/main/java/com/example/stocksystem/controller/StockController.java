@@ -46,12 +46,12 @@ public class StockController {
     //获取股票数据(带条件)
     @RequestMapping()
     public Response<List<StockVo>> getAllStockInfo(HttpServletRequest request, Integer stock_id, String stock_name,
-                                                   Integer pageIndex, Integer pageSize, String date) throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException, IOException {
+                                                   Integer pageIndex, Integer pageSize) throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException, IOException {
 
         System.out.println("index:"+pageIndex + "; size:" + pageSize + "id : " + stock_id);
         //根据session获取用户id
-//        System.out.println("flag" + request.getSession().getAttribute("flag"));
-//        Integer user_id = ((User)request.getSession().getAttribute("user")).getUserId();
+        Integer user_id = ((User)request.getSession().getAttribute("user")).getUserId();
+        System.out.println("通过session获取到的id : " + user_id);
         //Integer user_id = Integer.parseInt((String) request.getSession().getAttribute("id"));
         Response<List<StockVo>> response = new Response<>();
         if(stock_id != null&&stock_id < 0){
@@ -60,8 +60,7 @@ public class StockController {
             response.setData(new ArrayList<>());
             return response;
         }
-        System.out.println("日期是 : " + date);
-        List<StockVo> list = service.getStockInfo(stock_id, stock_name,2, pageIndex, pageSize, date);
+        List<StockVo> list = service.getStockInfo(stock_id, stock_name,user_id, pageIndex, pageSize);
         if(list == null){
             list = new ArrayList<>();
         }

@@ -5,14 +5,12 @@ import com.example.stocksystem.entity.User;
 import com.example.stocksystem.service.FavouriteService;
 import com.example.stocksystem.util.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/favourite")
@@ -22,12 +20,15 @@ public class FavouriteController {
     @Autowired
     FavouriteService service;
 
-    @GetMapping()
-    public Response<String> favourite(HttpServletRequest request, Integer stock_id, Integer type){
+    @PostMapping()
+    public Response<String> favourite(HttpServletRequest request, @RequestBody Map<String, Object> map){
         Response<String> response = new Response<>();
-        //Integer user_id = ((User)request.getSession().getAttribute("user")).getUserId();
-        if(type==1||type==0){
-            service.favourite(2, stock_id, type);
+        Integer user_id = ((User)request.getSession().getAttribute("user")).getUserId();
+        System.out.println("通过session获取到的id : " + user_id);
+        Integer stock_id = (Integer) map.get("stock_id");
+        int type = (Boolean)map.get("type")?1:0;
+        if(stock_id != null){
+            service.favourite(user_id, stock_id, type);
             String msg = type == 1?"收藏成功":"取消收藏成功";
             response.setMsg(msg);
             response.setCode(Response.OK);

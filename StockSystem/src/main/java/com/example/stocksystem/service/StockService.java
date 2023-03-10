@@ -21,7 +21,7 @@ public class StockService {
     StockDao dao;
 
     public List<StockVo> getStockInfo(Integer stock_id, String stock_name,Integer user_id,
-                                       Integer pageIndex, Integer pageSize, String date){
+                                       Integer pageIndex, Integer pageSize){
         IPage<StockVo> page;
         if(pageIndex != null && pageSize != null){
             page = new Page<>(pageIndex, pageSize);
@@ -31,7 +31,6 @@ public class StockService {
         QueryWrapper<StockVo> wrapper = new QueryWrapper<>();
         if(stock_id!=null)wrapper.eq("stock.stock_id", stock_id);
         if(stock_name!=null)wrapper.like("stock_name", stock_name);
-        if(date!=null)wrapper.eq("date", date);
         List<StockVo> records = dao.findStockInfo(page, wrapper).getRecords();
         for (StockVo vo : records) {
             UserFavourite i = dao.checkFavourite(user_id, vo.getStockId());

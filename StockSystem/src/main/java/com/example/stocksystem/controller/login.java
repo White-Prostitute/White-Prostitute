@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @RestController
@@ -66,8 +67,9 @@ public class login {
         }
 
         // 存入 session
-        request.getSession().setAttribute("user", user);
-        request.getSession().setAttribute("flag", 1);
+        HttpSession session = request.getSession();
+        session.setMaxInactiveInterval(30*600);
+        session.setAttribute("user", user);
         System.out.println("登录中 " + user);
 
         // 正确

@@ -18,11 +18,10 @@ public class FavouriteService {
 
     public void favourite(Integer user_id, Integer stock_id, Integer type){
         if(type == 1){
-            dao.insert(new UserFavourite(user_id, stock_id));
+            dao.insert(new UserFavourite(stock_id, user_id));
         }else if(type == 0){
-            QueryWrapper<UserFavourite> wrapper = new QueryWrapper<>();
-            wrapper.eq("stock_id", stock_id).eq("user_id", user_id);
-            dao.delete(wrapper);
+            System.out.println("删除操作"+ user_id + "  " + stock_id);
+            dao.cancelFavourite(stock_id, user_id);
         }
     }
 
