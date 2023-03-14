@@ -108,15 +108,15 @@ public class FileController {
             stockVos.add(vo);
         }
         UsualUtil.writeCsvData(stockVos);
-        FileInputStream fis = new FileInputStream("data"+ File.pathSeparator+"data.csv");
-        servletResponse.setHeader("Content-Disposition", "attachment;fileName=data.csv");
-        servletResponse.setHeader("content-type", "application/octet-stream");
-        ServletOutputStream outputStream = servletResponse.getOutputStream();
-        byte[] bytes = new byte[1024];
-        int len = 0;
-        while((len = fis.read(bytes))!=-1){
-            outputStream.write(bytes, 0, len);
-        }
+//        FileInputStream fis = new FileInputStream("data"+ File.pathSeparator+"data.csv");
+//        servletResponse.setHeader("Content-Disposition", "attachment;fileName=data.csv");
+//        servletResponse.setHeader("content-type", "application/octet-stream");
+//        ServletOutputStream outputStream = servletResponse.getOutputStream();
+//        byte[] bytes = new byte[1024];
+//        int len = 0;
+//        while((len = fis.read(bytes))!=-1){
+//            outputStream.write(bytes, 0, len);
+//        }
         return null;
     }
 

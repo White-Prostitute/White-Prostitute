@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,9 +32,10 @@ public class StockController {
 
     @GetMapping("/test")
     public void test(HttpServletResponse servletResponse) throws IOException {
-        FileInputStream fis = new FileInputStream("data"+ File.pathSeparator+"data.csv");
+        FileInputStream fis = new FileInputStream("data;data.csv");
         ServletOutputStream outputStream = servletResponse.getOutputStream();
         servletResponse.setHeader("Content-Disposition", "attachment;fileName=data.csv");
+        servletResponse.setHeader("content-type", "application/octet-stream");
         byte[] bytes = new byte[1024];
         int len;
         while((len = fis.read(bytes))!=-1){

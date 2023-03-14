@@ -72,7 +72,7 @@ public class UsualUtil {
 
     //将获取到的list写入Csv文件
     public static void writeCsvData(List<StockVo> list) throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
-        Writer writer = new FileWriter("data" + File.pathSeparator + "data.csv");
+        Writer writer = new FileWriter("data;data.csv");
         String[] column = {"stockId","date","stockName","stockType","priceHigh","priceLow",
                 "priceOpen","priceClose","volume"};
         ColumnPositionMappingStrategy<StockVo> mappingStrategy =
