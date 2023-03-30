@@ -1,6 +1,5 @@
 package com.example.stocksystem.controller;
 
-
 import com.alibaba.excel.EasyExcel;
 import com.example.stocksystem.dao.StockDao;
 import com.example.stocksystem.entity.StockChange;
@@ -13,16 +12,16 @@ import com.example.stocksystem.vo.StockVo;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/file")
@@ -37,6 +36,9 @@ public class FileController {
 
     @Autowired
     StockDao dao;
+
+    @Resource
+    RedisTemplate<String, String> template;
 
     //接收base64格式的文件
     @PostMapping()
@@ -83,6 +85,11 @@ public class FileController {
             List<StockChange> csvData = UsualUtil.getCsvData(file);
             System.out.println("数据量 : " + csvData.size());
             //service.updateBatchById(csvData);//更新实时表
+
+            //更新数据将导致缓存失效,暂时先让所有缓存失效
+            Set<String> keys = template.keys("*");
+            if(keys != null)template.delete(keys);
+
             for (StockChange change : csvData) {
                 dao.updateStockInfo(change);
             }

@@ -76,6 +76,7 @@ public class StockController {
         return response;
     }
 
+
     //获取所
     @GetMapping("/favourite/history")
     public Response<List<List<StockChange>>> getHistoryListRecord(HttpServletRequest request){

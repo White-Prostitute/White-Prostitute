@@ -7,8 +7,11 @@ import com.example.stocksystem.service.UserService;
 import com.example.stocksystem.util.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +29,9 @@ public class login {
 
     @Autowired
     UserService userService;
+
+    @Resource
+    RedisTemplate<String, String> template;
 
     /**
      * 登录
@@ -71,6 +77,10 @@ public class login {
         session.setMaxInactiveInterval(30*600);
         session.setAttribute("user", user);
         System.out.println("登录中 " + user);
+
+        //存入redis缓存
+        ValueOperations<String, String> ops = template.opsForValue();
+        ops.set(user.getUserId()+"", System.currentTimeMillis()+"");
 
         // 正确
         response.setCode(Response.OK);

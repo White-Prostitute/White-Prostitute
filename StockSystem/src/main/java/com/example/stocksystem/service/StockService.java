@@ -1,5 +1,6 @@
 package com.example.stocksystem.service;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,11 +9,15 @@ import com.example.stocksystem.entity.StockChange;
 import com.example.stocksystem.entity.UserFavourite;
 import com.example.stocksystem.vo.StockVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class StockService {
@@ -20,8 +25,19 @@ public class StockService {
     @Autowired
     StockDao dao;
 
+    @Resource
+    RedisTemplate<String, String> template;
+
     public List<StockVo> getStockInfo(Integer stock_id, String stock_name,Integer user_id,
                                        Integer pageIndex, Integer pageSize){
+        ValueOperations<String, String> ops = template.opsForValue();
+        String key = "all_"+stock_id+"_"+stock_name+"_"+user_id+"_"+pageIndex+"_"+pageSize;
+        //先查缓存
+        String s = ops.get(key);
+        if(s!=null){
+            return JSONUtil.parse(s).toBean(List.class);
+        }
+        //缓存没命中，就查数据库
         IPage<StockVo> page;
         if(pageIndex != null && pageSize != null){
             page = new Page<>(pageIndex, pageSize);
@@ -36,6 +52,7 @@ public class StockService {
             UserFavourite i = dao.checkFavourite(user_id, vo.getStockId());
             vo.setFavourite(i != null);
         }
+        ops.set(key, JSONUtil.toJsonStr(records), 5, TimeUnit.MINUTES);
         return records;
     }
 
@@ -157,8 +174,18 @@ public class StockService {
     }
 
     public List<StockChange> getHistoryRecord(Integer stock_id, Integer pageSize){
+        ValueOperations<String, String> ops = template.opsForValue();
+        String key = "history_" + stock_id + "_" + pageSize;
+        //先查缓存
+        String data = ops.get(key);
+        if(data != null){
+            return JSONUtil.parse(data).toBean(List.class);
+        }
+        //缓存未命中，查数据库，并存入缓存
         IPage<StockChange> page = new Page<>(1, pageSize);
-        return dao.getHistoryRecord(page, stock_id).getRecords();
+        List<StockChange> records = dao.getHistoryRecord(page, stock_id).getRecords();
+        ops.set(key, JSONUtil.toJsonStr(records), 2, TimeUnit.MINUTES);
+        return records;
     }
 
     public List<StockVo> getTop(Integer size){

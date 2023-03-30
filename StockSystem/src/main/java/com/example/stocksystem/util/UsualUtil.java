@@ -94,5 +94,4 @@ public class UsualUtil {
         csvWriter.close();
         writer.close();
     }
-
 }

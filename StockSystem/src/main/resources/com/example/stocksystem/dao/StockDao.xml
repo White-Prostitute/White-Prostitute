@@ -4,20 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.stocksystem.dao.StockDao">
-    <select id="getStockInfoByCondition" resultType="java.util.Map">
-        select stock.*,stock_change.* from stock inner join stock_change on stock.stock_id=stock_change.stock_id
-        <where>
-            <if test="stock_id != -1">
-                stock.stock_id = #{stock_id}
-            </if>
-            <if test="stock_name != null">
-                and stock_name like "%"#{stock_name}"%"
-            </if>
-        </where>
-        <if test="page_index > 0 and page_size > 0">
-            limit {page_index} {page_size}
-        </if>
+<!--    <select id="getStockInfoByCondition" resultType="java.util.Map">-->
+<!--        select stock.*,stock_change.* from stock inner join stock_change on stock.stock_id=stock_change.stock_id-->
+<!--        <where>-->
+<!--            <if test="stock_id != -1">-->
+<!--                stock.stock_id = #{stock_id}-->
+<!--            </if>-->
+<!--            <if test="stock_name != null">-->
+<!--                and stock_name like "%"#{stock_name}"%"-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        <if test="page_index > 0 and page_size > 0">-->
+<!--            order by date DESC limit {page_index} {page_size} group by stock_id-->
+<!--        </if>-->
 
+<!--    </select>-->
+
+    <select id="getStockInfoByCondition" resultType="com.example.stocksystem.vo.StockVo">
+        select * from stock join (select stock_id,price_high,price_low,price_open,price_close,volume, max(date) as date
+        from stock_change group by stock_id) as t on t.stock_id = stock.stock_id;
     </select>
 
 </mapper>
